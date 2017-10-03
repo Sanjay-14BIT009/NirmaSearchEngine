@@ -1,0 +1,62 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Fri Sep 29 09:28:09 2017
+
+@author: Abc
+"""
+
+import sys,csv
+from timeit import default_timer as timer 
+
+maxInt = sys.maxsize
+decrement = True
+
+word = input()
+
+while decrement:
+    # decrease the maxInt value by factor 10 
+    # as long as the OverflowError occurs.
+
+    decrement = False
+    try:
+        csv.field_size_limit(maxInt)
+    except OverflowError:
+        maxInt = int(maxInt/10)
+        decrement = True
+
+file=open("Body_main.csv" , 'rt')
+reader = csv.reader(file)
+
+docList = set()
+
+start = timer()
+
+for row in reader:
+    data = row
+    
+    if(data[1].find(word) != -1):
+        docList.add(int(data[0]))
+        
+end = timer()
+    
+file.close()
+
+docList = sorted(docList)
+
+file=open("URL_main.csv" , 'rt')
+reader = csv.reader(file)
+
+lineNo = 0
+
+for row in reader:
+    data = row
+    
+    if(lineNo in docList):
+        print(data[1])
+    
+    lineNo += 1
+    
+print("Number of Records Retrieved : " + str(len(docList)) + "\n")
+print(end-start)
+    
+file.close()
